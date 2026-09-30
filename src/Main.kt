@@ -67,21 +67,39 @@ class ConversorMoeda {
     }
 }
 
-fun main() {
-    // cria o conversor pra poder usar a função converter
-    val conversor = ConversorMoeda()
+class ConversorMedida {
 
-    // usar listOf para agrupar
-    val listaDeGastos = listOf(
-        Transacao(100.0, "USD", 1, true, "ISENTOIOF"), // Ex: Compras diversas
-        Transacao(50.0, "EUR", 2, false, null),        // Ex: Lanche rápido (estilo 99 Food)
-        Transacao(20.0, "GBP", 3, true, null),         // Ex: Ingresso Cinépolis Millenium
-        Transacao(15.0, "USD", 1, true, null),         // Ex: Compras no Supermercados DB
-        Transacao(200.0, "EUR", 2, false, null)        // Ex: Lembrancinhas e transporte
-    )
+    fun kmParaMilhas(km: Double): Double {
+        return km * 0.621371
+    }
 
-    val total = conversor.converterLote(listaDeGastos)
-
-    // converte e mostra o total
-    println("Total da viagem em Reais: R$ ${"%.2f".format(total)}")
+    fun celsiusParaFahrenheit(celsius: Double): Double {
+        return celsius * 1.8 + 32
+    }
 }
+
+    fun main() {
+        // cria o conversor pra poder usar a função converter
+        val conversor = ConversorMoeda()
+        val conversorMedida = ConversorMedida()
+        // usar listOf para agrupar
+        val listaDeGastos = listOf(
+            Transacao(100.0, "USD", 1, true, "ISENTOIOF"), // Ex: Compras diversas
+            Transacao(50.0, "EUR", 2, false, null),        // Ex: Lanche rápido (estilo 99 Food)
+            Transacao(20.0, "GBP", 3, true, null),         // Ex: Ingresso Cinépolis Millenium
+            Transacao(15.0, "USD", 1, true, null),         // Ex: Compras no Supermercados DB
+            Transacao(200.0, "EUR", 2, false, null)        // Ex: Lembrancinhas e transporte
+        )
+
+        val total = conversor.converterLote(listaDeGastos)
+
+        // converte e mostra o total
+        println("Total da viagem em Reais: R$ ${"%.2f".format(total)}")
+
+        //exemplo conversão de medidas
+        val km = 100.0
+        val graus = 35.0
+
+        println("$km km = ${conversorMedida.kmParaMilhas(km)} milhas")
+        println("$graus °C = ${conversorMedida.celsiusParaFahrenheit(graus)} °F")
+    }
