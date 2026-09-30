@@ -2,7 +2,8 @@
 class Transacao(
     val valorOriginal: Double, //valor na moeda estrangeira
     val moedaOrigem: String,   //nome da moeda (USD, EUR, GBP), só pra mostrar
-    val moedaDestino: Int      //codigo da moeda: 1 = USD, 2 = EUR, 3 = GBP
+    val moedaDestino: Int,      //codigo da moeda: 1 = USD, 2 = EUR, 3 = GBP
+    val cartaoCredito: Boolean //true se usou cartão, false se não
 )
 
 //classe que faz a conversao pra reais
@@ -22,21 +23,31 @@ class ConversorMoeda {
         //valor original vezes a cotacao
         val valorConvertido = transacao.valorOriginal * cotacao
 
+        //calculo do IOF
+        var valorIof = 0.0
+
+        // checa se a moeda de destino é internacional (códigos 1, 2 ou 3)
+        val moedaInternacional = transacao.moedaDestino in 1..3
+
+        // se a moeda for internacional E usou cartão de crédito
+        if (moedaInternacional && transacao.cartaoCredito) {
+            valorIof = valorConvertido * 0.0538
+        }
         //return devolve o resultado pra quem chamou a funcao
-        return valorConvertido
+        return valorConvertido + valorIof
     }
 }
 
 fun main() {
-    //cria o conversor pra poder usar a funcao converter
+    // cria o conversor pra poder usar a funcao converter
     val conversor = ConversorMoeda()
 
-    //cria 3 gastos de teste
-    val gasto1 = Transacao(100.0, "USD", 1)
-    val gasto2 = Transacao(50.0, "EUR", 2)
-    val gasto3 = Transacao(20.0, "GBP", 3)
+    // cria 3 gastos de teste (agora com o true ou false do cartão)
+    val gasto1 = Transacao(100.0, "USD", 1, true)  // usou cartão (vai ter IOF)
+    val gasto2 = Transacao(50.0, "EUR", 2, false)  // dinheiro espécie (sem IOF)
+    val gasto3 = Transacao(20.0, "GBP", 3, true)   // usou cartão (vai ter IOF)
 
-    //converte e mostra cada gasto
+    // converte e mostra cada gasto
     println("Gasto 1: R$ ${conversor.converter(gasto1)}")
     println("Gasto 2: R$ ${conversor.converter(gasto2)}")
     println("Gasto 3: R$ ${conversor.converter(gasto3)}")
